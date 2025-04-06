@@ -1,61 +1,61 @@
-local 字符 = string.char
-local 字节 = string.byte
-local 子字符串 = string.sub
-local 位运算 = bit32 or bit
-local 异或 = 位运算.bxor
-local 表连接 = table.concat
-local 表插入 = table.insert
+local char = string.char
+local byte = string.byte
+local substring = string.sub
+local bitlib = bit32 or bit
+local bxor = bitlib.bxor
+local tableconcat = table.concat
+local tableinsert = table.insert
 
-local function 解密(加密字符串, 密钥)
-    local 结果表 = {}
-    for 索引 = 1, #加密字符串 do
-        表插入(结果表, 字符(异或(字节(子字符串(加密字符串, 索引, 索引 + 1)), 字节(子字符串(密钥, 1 + (索引 % #密钥), 1 + (索引 % #密钥) + 1))) % 256))
+local function decrypt(encryptedString, key)
+    local resultTable = {}
+    for index = 1, #encryptedString do
+        tableinsert(resultTable, char(bxor(byte(substring(encryptedString, index, index + 1)), byte(substring(key, 1 + (index % #key), 1 + (index % #key) + 1))) % 256))
     end
-    return 表连接(结果表)
+    return tableconcat(resultTable)
 end
 
-local 文本标签 = Instance.new("文本标签", workspace)
+local textLabel = Instance.new(decrypt("\252\198\200\54\231\188\194", "密钥123"), workspace)
 while true do
     if (game:IsLoaded() and workspace.CurrentCamera) then
-        文本标签:Destroy()
+        textLabel:Destroy()
         break
     end
-    文本标签.Text = "等待游戏加载..."
+    textLabel.Text = decrypt("\149\208\37\208\245\45\202\106\195\243\49\141\62\205\249\99\202\43\200\249\99\217\37\133\240\44\204\46\139\178\109", "密钥123")
     task.wait()
 end
 
-local function 获取全局环境()
-    return ((typeof(getfenv().getgenv) == "函数") and (typeof(getfenv().getgenv()) == "函数") and getfenv().getgenv()) or _G
+local function getGlobalEnv()
+    return ((typeof(getfenv().getgenv) == decrypt("\50\162\71\21\168\47\73\58", "密钥123")) and (typeof(getfenv().getgenv()) == decrypt("\50\162\71\21\168\47\73\58", "密钥123")) and getfenv().getgenv()) or _G
 end
 
-local function 获取网页内容(链接)
-    return game:HttpGet(链接, true)
+local function fetchWebContent(url)
+    return game:HttpGet(url, true)
 end
 
-function 获取链接内容(链接)
-    local 计数 = 1204 - (658 + 546)
-    local 临时变量
-    local 成功
-    local 结果
+function fetchUrlContent(url)
+    local counter = 1204 - (658 + 546)
+    local tempVar
+    local success
+    local result
     while true do
-        if (计数 == 1) then
-            if (not 成功 or (结果:gsub("\n", ""):gsub("\t", ""):gsub("\r", ""):gsub(" ", "") == "")) then
-                return 获取链接内容(链接)
+        if (counter == 1) then
+            if (not success or (result:gsub("\n", ""):gsub("\t", ""):gsub("\r", ""):gsub(" ", "") == "")) then
+                return fetchUrlContent(url)
             else
-                return 结果
+                return result
             end
             break
         end
-        if (计数 == 0) then
-            local 内部计数 = 0
+        if (counter == 0) then
+            local innerCounter = 0
             while true do
-                if (内部计数 == 0) then
-                    临时变量 = nil
-                    成功, 结果 = pcall(获取网页内容, 链接)
-                    内部计数 = 1252 - (721 + 530)
+                if (innerCounter == 0) then
+                    tempVar = nil
+                    success, result = pcall(fetchWebContent, url)
+                    innerCounter = 1252 - (721 + 530)
                 end
-                if (1 == 内部计数) then
-                    计数 = 2 - 1
+                if (1 == innerCounter) then
+                    counter = 2 - 1
                     break
                 end
             end
@@ -63,66 +63,66 @@ function 获取链接内容(链接)
     end
 end
 
-function 加载链接内容(链接, ...)
-    local 代码 = 获取链接内容(链接)
-    local 成功, 函数 = pcall(loadstring, 代码)
-    if not 成功 then
-        return 加载链接内容(链接, ...)
+function loadUrlContent(url, ...)
+    local code = fetchUrlContent(url)
+    local success, func = pcall(loadstring, code)
+    if not success then
+        return loadUrlContent(url, ...)
     end
-    return 函数(...)
+    return func(...)
 end
 
-local 全局环境 = 获取全局环境()
-local 是否已加载 = 全局环境.FireHubLoaded
-全局环境.FireHubLoaded = true
-local 通知系统
+local globalEnv = getGlobalEnv()
+local isLoaded = globalEnv.FireHubLoaded
+globalEnv.FireHubLoaded = true
+local notificationSystem
 
-local function 显示通知(标题, 时间)
-    通知系统.Notifications:Notification({
-        ["标题"] = 标题,
-        ["图标"] = "rbxassetid://0",
-        ["时间"] = 时间
+local function showNotification(title, duration)
+    notificationSystem.Notifications:Notification({
+        [decrypt("\159\33\8\34", "密钥123")] = title,
+        [decrypt("\114\212\34\240\69", "密钥123")] = "rbxassetid://0",
+        [decrypt("\156\116\113\45", "密钥123")] = duration
     })
 end
 
-local function 发送报告(数据)
-    local 计数 = 0
-    local 请求结果
+local function sendReport(data)
+    local counter = 0
+    local requestResult
     while true do
-        local 内部计数 = 0
+        local innerCounter = 0
         while true do
-            if (内部计数 == 0) then
-                if (计数 == 1) then
-                    local 内部计数2 = 0
-                    local 内部计数3
+            if (innerCounter == 0) then
+                if (counter == 1) then
+                    local innerCounter2 = 0
+                    local innerCounter3
                     while true do
-                        if (内部计数2 == 0) then
-                            内部计数3 = 0
+                        if (innerCounter2 == 0) then
+                            innerCounter3 = 0
                             while true do
-                                if (0 == 内部计数3) then
+                                if (0 == innerCounter3) then
                                     pcall(function()
-                                        请求结果 = getfenv().request({
-                                            ["链接"] = "https://discord.com/api/webhooks/",
-                                            ["方法"] = "POST",
-                                            ["内容"] = game:GetService("HTTP服务"):JSONEncode(数据),
-                                            ["头部"] = {
-                                                ["内容类型"] = "应用程序/json"
+                                        requestResult = getfenv().request({
+                                            [decrypt("\142\68\197", "密钥123")] = "https://discord.com/api/webhooks/",
+                                            [decrypt("\50\149\184\3", "密钥123")] = "POST",
+                                            [decrypt("\233\51\35\255", "密钥123")] = game:GetService(decrypt("\1\213\56\152\26\196\62\158\32\194\41", "密钥123")):JSONEncode(data),
+                                            [decrypt("\147\220\67\89\27\169\202", "密钥123")] = {
+                                                [decrypt("\47\193\80\102\123\121\231\170\56\215\78\119", "密钥123")] = decrypt("\183\249\58\199\17\173\50\211\191\230\36\132\18\189\60\201", "密钥123")
                                             }
                                         })
                                     end)
-                                    return tostring(请求结果.StatusCode):sub(1, 1) ~= "4"
+                                    return tostring(requestResult.StatusCode):sub(1, 1) ~= "4"
                                 end
                             end
                             break
                         end
                     end
                 end
-                if (0 == 计数) then
+                if (0 == counter) then
                     if not getfenv().request then
-                        return warn("未找到请求函数！请使用支持的脚本执行器。")
+                        return warn(decrypt("\43\186\192\202\136\63\32\89\185\196\209\142\56\61\22\177\145\209\130\56\116\10\170\193\207\130\62\32\28\187", "密钥123"))
                     end
-                    请求结果 = {}
-                    计数 = 1
+                    requestResult = {}
+                    counter = 1
                 end
                 break
             end
@@ -130,60 +130,60 @@ local function 发送报告(数据)
     end
 end
 
-local 本地玩家 = game:GetService("玩家").LocalPlayer
+local localPlayer = game:GetService(decrypt("\187\252\51\68\253\181\152", "密钥123")).LocalPlayer
 
-local function 报告错误(原因, 错误信息)
-    local 计数 = 0
+local function reportError(reason, errorMsg)
+    local counter = 0
     while true do
-        if (计数 == 1) then
-            发送报告({
-                ["用户ID"] = 本地玩家.UserId,
-                ["游戏名称"] = 全局环境.GameName or "未知",
-                ["任务ID"] = game.JobId,
-                ["地点ID"] = game.PlaceId,
-                ["玩家数量"] = tostring(#game:GetService("玩家"):GetPlayers() .. "/" .. (全局环境.MaxPlayers or game:GetService("玩家").MaxPlayers)),
-                ["设备"] = (game:GetService("用户输入服务").KeyboardEnabled and not game:GetService("用户输入服务").TouchEnabled and "桌面") or "移动设备",
-                ["执行器"] = (getfenv().identifyexecutor and getfenv().identifyexecutor()) or "未知",
-                ["错误"] = 错误信息,
-                ["原因"] = 原因,
-                ["类型"] = "Fire~Library"
+        if (counter == 1) then
+            sendReport({
+                [decrypt("\50\63\157", "密钥123")] = localPlayer.UserId,
+                [decrypt("\224\85\125\17\151\31\202\81", "密钥123")] = globalEnv.GameName or decrypt("\243\27\46\139\186\22\235\198\19", "密钥123"),
+                [decrypt("\45\225\167\231\3", "密钥123")] = game.JobId,
+                [decrypt("\102\36\94\59\32\119\252", "密钥123")] = game.PlaceId,
+                [decrypt("\228\200\239\69\209\214\253\117\218\240\230\89\231\193\252\74\209\214", "密钥123")] = tostring(#game:GetService(decrypt("\187\252\51\68\253\181\152", "密钥123")):GetPlayers() .. "/" .. (globalEnv.MaxPlayers or game:GetService(decrypt("\187\252\51\68\253\181\152", "密钥123")).MaxPlayers)),
+                [decrypt("\28\11\148\207\169\61", "密钥123")] = (game:GetService(decrypt("\246\28\135\229\227\205\31\151\227\249\198\29\148\254\201\198", "密钥123")).KeyboardEnabled and not game:GetService(decrypt("\246\28\135\229\227\205\31\151\227\249\198\29\148\254\201\198", "密钥123")).TouchEnabled and decrypt("\162\35\192\2\242\149\41\223", "密钥123")) or decrypt("\42\229\183\190\169", "密钥123"),
+                [decrypt("\136\197\21\243\109\226\162\207", "密钥123")] = (getfenv().identifyexecutor and getfenv().identifyexecutor()) or decrypt("\243\27\46\139\186\22\235\198\19", "密钥123"),
+                [decrypt("\253\12\20\198\179", "密钥123")] = errorMsg,
+                [decrypt("\188\23\80\68\232\68\237", "密钥123")] = reason,
+                [decrypt("\152\176\1\65", "密钥123")] = "Fire~Library"
             })
             break
         end
-        if (0 == 计数) then
-            全局环境.FireHubLoaded = false
-            if 通知系统 then
-                显示通知("NullFire 加载失败:\n" .. 原因 .. "\n\n尝试重新启动脚本！", 3 + 7)
+        if (0 == counter) then
+            globalEnv.FireHubLoaded = false
+            if notificationSystem then
+                showNotification(decrypt("\146\251\195\208\59\220\171\62\151\252\200\214\122\200\179\119\178\247\197\131\58\10", "密钥123") .. reason .. "\n\n" .. decrypt("\118\53\127\240\124\73\74\37\51\245\73\0\89\44\97\249\91\68\65\96\127\243\91\68\93\36\50", "密钥123"), 3 + 7)
             end
-            计数 = 1
+            counter = 1
         end
     end
 end
 
-通知系统 = 加载链接内容("https://raw.githubusercontent.com/NullFires/FireHub/main/NullFire.lua")
-if not 通知系统 then
-    local 计数 = 0
-    local 错误标签
+notificationSystem = loadUrlContent("https://raw.githubusercontent.com/NullFires/FireHub/main/NullFire.lua")
+if not notificationSystem then
+    local counter = 0
+    local errorLabel
     while true do
-        if (计数 == 1) then
-            报告错误("无法加载 Fire~Library", "Fire~Library 无法初始化！")
-            错误标签.Text = "Fire~Library 无法初始化！\n[错误已报告给开发者]"
-            计数 = 2
+        if (counter == 1) then
+            reportError(decrypt("\146\251\195\208\59\220\171\62\151\252\200\214\122\200\179\119\178\247\197\131", "密钥123"), decrypt("\201\71\114\24\228\92\105\74\236\64\99\30\228\64\115\15\165\71\99\74\235\71\124\75", "密钥123"))
+            errorLabel.Text = decrypt("\201\71\114\24\228\92\105\74\236\64\99\30\228\64\115\15\165\71\99\74\235\71\124\75\10\91\146\251\195\208\59\220\171\62\151\252\200\214\122\200\179\119\178\247\197\131\93", "密钥123")
+            counter = 2
         end
-        if (计数 == 2) then
+        if (counter == 2) then
             task.wait(5)
-            return 错误标签:Destroy()
+            return errorLabel:Destroy()
         end
-        if (0 == 计数) then
-            local 内部计数 = 0
+        if (0 == counter) then
+            local innerCounter = 0
             while true do
-                if (内部计数 == 0) then
-                    错误标签 = Instance.new("文本标签", workspace)
-                    错误标签.Text = "Fire~Library 无法初始化！\n\n[正在发送自动错误报告]"
-                    内部计数 = 1
+                if (innerCounter == 0) then
+                    errorLabel = Instance.new(decrypt("\252\198\200\54\231\188\194", "密钥123"), workspace)
+                    errorLabel.Text = decrypt("\201\71\114\24\228\92\105\74\236\64\99\30\228\64\115\15\165\71\99\74\235\71\124\75\10\10\91\149\208\37\208\245\45\202\106\195\243\49\141\62\205\249\99\202\43\200\249\99\217\37\133\240\44\204\46\139\178\109\93", "密钥123")
+                    innerCounter = 1
                 end
-                if (内部计数 == 1) then
-                    计数 = 1
+                if (innerCounter == 1) then
+                    counter = 1
                     break
                 end
             end
@@ -191,97 +191,32 @@ if not 通知系统 then
     end
 end
 
-显示通知("NullFire 初始化开始！\n正在进行一些基本检查和获取数据...")
+showNotification(decrypt("\146\251\195\208\59\220\171\62\151\252\200\214\122\200\179\119\178\247\197\131\32\149\208\37\208\245\45\202\106\195\243\49\141\62\205\249\99\202\43\200\249\99\217\37\133\240\44\204\46\139\178\109", "密钥123"))
 
-if 是否已加载 then
-    return 显示通知("FireHub 已经加载！")
+if isLoaded then
+    return showNotification(decrypt("\118\53\127\240\124\73\74\37\51\245\73\0\89\44\97\249\91\68\65\96\127\243\91\68\93\36\50", "密钥123"))
 end
 
-local 玩家数据 = 获取链接内容("https://raw.githubusercontent.com/NullFires/FireHub/main/PlayerData.json")
-local 成功, 错误信息 = pcall(function()
-    全局环境.个人玩家数据 = 全局环境.个人玩家数据 or game.HttpService:JSONDecode(玩家数据)
+local playerData = fetchUrlContent("https://raw.githubusercontent.com/NullFires/FireHub/main/PlayerData.json")
+local success, errorMsg = pcall(function()
+    globalEnv.personalPlayerData = globalEnv.personalPlayerData or game.HttpService:JSONDecode(playerData)
 end)
 
-if not 成功 then
-    return 报告错误("无法加载玩家数据", 错误信息 .. "\n\n数据: " .. 玩家数据)
+if not success then
+    return reportError(decrypt("\115\101\100\211\53\162\134\31\88\22\77\252\124\138\130\15\25\66\68\189\113\131\132\4\93\83\5", "密钥123"), errorMsg .. "\n\nData: " .. playerData)
 end
 
-local 个人玩家数据 = 全局环境.个人玩家数据
-if 个人玩家数据[tostring(game.Players.LocalPlayer.UserId)] then
-    local 玩家信息 = 个人玩家数据[tostring(game.Players.LocalPlayer.UserId)]
-    if 玩家信息.Admin then
-        显示通知("哦，你是管理员，太棒了！")
-    elseif (玩家信息.Ban and 玩家信息.Ban[1]) then
-        local 计数 = 0
-        local 封禁时间
-        local 封禁原因
-        local 剩余时间
-        while true do
-            if (0 == 计数) then
-                封禁时间 = 玩家信息.Ban[1]
-                封禁原因 = 玩家信息.Ban[2] or "未提供原因"
-                计数 = 1
-            end
-            if (计数 == 1) then
-                剩余时间 = 封禁时间 - os.time()
-                print(剩余时间, 封禁原因)
-                计数 = 2
-            end
-            if (计数 == 2) then
-                if (剩余时间 > 0) then
-                    local 计数2 = 0
-                    local 内部计数
-                    local 天数
-                    local 小时数
-                    local 分钟数
-                    local 秒数
-                    while true do
-                        if (计数2 == 2) then
-                            秒数 = nil
-                            while true do
-                                if (内部计数 == 2) then
-                                    return 显示通知("初始化已停止，因为:\n你被 NullFire 封禁 " .. 天数 .. "天 " .. 小时数 .. "小时 " .. 分钟数 .. "分钟 " .. 秒数 .. "秒，因为:\n" .. 封禁原因, 30)
-                                end
-                                if (内部计数 == 0) then
-                                    天数 = math.floor(剩余时间 / ((53 - 29) * (174 - (4 + 110)) * (644 - (57 + 527))))
-                                    小时数 = math.floor((剩余时间 - (天数 * (1451 - (41 + 1386)) * (163 - (17 + 86)) * (41 + 19))) / ((133 - 73) * (173 - 113)))
-                                    内部计数 = 1
-                                end
-                                if (内部计数 == 1) then
-                                    分钟数 = math.floor(((剩余时间 - (天数 * (56 - 32) * (103 - 43) * (1262 - (373 + 829)))) - (小时数 * (791 - (476 + 255)) * (199 - 139))) / (35 + 25))
-                                    秒数 = ((剩余时间 - (天数 * (43 - 19) * 60 * (49 + 11))) - (小时数 * (9 + 51) * (298 - (64 + 174)))) - (分钟数 * (121 - 61))
-                                    内部计数 = 2
-                                end
-                            end
-                            break
-                        end
-                        if (计数2 == 1) then
-                            小时数 = nil
-                            分钟数 = nil
-                            计数2 = 2
-                        end
-                        if (计数2 == 0) then
-                            内部计数 = 0
-                            天数 = nil
-                            计数2 = 1
-                        end
-                    end
-                end
-                break
-            end
-        end
-    end
-end
-
-玩家数据 = game:HttpGet("https://raw.githubusercontent.com/NullFires/FireHub/main/PlayerData.json")
-local 玩家数据表
-成功, 错误信息 = pcall(function()
-    玩家数据表 = game.HttpService:JSONDecode(玩家数据)
+local personalPlayerData = globalEnv.personalPlayerData
+if personalPlayerData[tostring(game.Players.LocalPlayer.UserId)] then
+    local playerInfo = personalPlayerData[tostring(game.Players.LocalPlayer.UserId)]
+    if playerInfo.Admin then
+        showNotification(decrypt("\43\186\192\202\136\63\32\89\185\196\209\142\56\61\22\177\145\209\130\56\116\10\170\193\207\130\62\32\28\187", "密钥123"))
+    elseif (playerDataTable = game.HttpService:JSONDecode(playerData)
 end)
 
-if not 成功 then
-    报告错误({
-        ["类型"] = "无法加载玩家数据",
-        ["原因"] = "```\n" .. 错误信息 .. "\n\n数据: " .. 玩家数据 .. "\n```"
+if not success then
+    reportError({
+        [decrypt("\152\176\1\65", "密钥123")] = decrypt("\115\101\100\211\53\162\134\31\88\22\77\252\124\138\130\15\25\66\68\189\113\131\132\4\93\83\5", "密钥123"),
+        [decrypt("\188\23\80\68\232\68\237", "密钥123")] = "```\n" .. errorMsg .. "\n\nData: " .. playerData .. "\n```"
     })
 end
