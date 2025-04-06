@@ -1,42 +1,42 @@
 local defaults = {
     ESP = {
-        ["Money BagESP"] = false, -- 钱袋ESP
-        ["MonsterESP"] = false, -- 怪兽ESP
-        ["Dead MonsterESP"] = false, -- 死亡怪兽ESP
-        ["AnimalESP"] = false, -- 动物ESP
-        ["Dead AnimalESP"] = false, -- 死亡动物ESP
-        ["ItemESP"] = false, -- 物品ESP
-        ["Vault CodeESP"] = false, -- 保险库代码ESP
-        ["Train (the most useful)ESP"] = false -- 火车（最有用）ESP
+        ["钱袋ESP"] = false,
+        ["怪兽ESP"] = false,
+        ["死亡怪兽ESP"] = false,
+        ["动物ESP"] = false,
+        ["死亡动物ESP"] = false,
+        ["物品ESP"] = false,
+        ["保险库代码ESP"] = false,
+        ["火车(最有用)ESP"] = false
     },
     ExtraPP = 1,
-    AutoCollectBags = false, -- 自动收集钱袋
-    AutoPickTools = false, -- 自动拾取工具
-    AutoPickOther = false, -- 自动拾取其他物品
-    AutoPickArmor = false, -- 自动拾取护甲
-    AutoPickBonds = false, -- 自动拾取债券
-    Noclip = false, -- 无碰撞
+    AutoCollectBags = false,
+    AutoPickTools = false,
+    AutoPickOther = false,
+    AutoPickArmor = false,
+    AutoPickBonds = false,
+    Noclip = false,
     NC = false,
-    ShowTime = false, -- 显示时间
-    ShowDistance = false, -- 显示距离
-    ShowSpeed = false, -- 显示速度
-    ShowFuel = false, -- 显示燃料
+    ShowTime = false,
+    ShowDistance = false,
+    ShowSpeed = false,
+    ShowFuel = false,
     II = false,
     GKA = false,
     MA = false,
     ARG = false,
-    Raycast = false, -- 射线检测
-    SilentAim = false, -- 无声瞄准
-    Mode = "Distance", -- 模式：距离
-    NoVoid = false, -- 无虚空
-    SaveBulltets = false, -- 保存子弹
+    Raycast = false,
+    SilentAim = false,
+    Mode = "距离",
+    NoVoid = false,
+    SaveBulltets = false,
 
-    BandageUse = 0, -- 绷带使用
-    OilUse = 0, -- 蛇油使用
-    OilUseCooldown = 5, -- 蛇油使用冷却时间
-    KAR = 500, -- 击杀范围
+    BandageUse = 0,
+    OilUse = 0,
+    OilUseCooldown = 5,
+    KAR = 500,
 
-    ThrowPower = 100 -- 投掷力量
+    ThrowPower = 100
 }
 
 local vals = table.clone(defaults)
@@ -126,8 +126,8 @@ end
 local myGuns = {}
 local melee = {}
 local heals = {
-    Bandage = {}, -- 绷带
-    ["Snake Oil"] = {} -- 蛇油
+    绷带 = {},
+    ["蛇油"] = {}
 }
 
 local function bp(v)
@@ -325,4 +325,156 @@ local function canGetPivot(pp)
     return pp.Parent.GetPivot
 end
 local fireproximityprompt = function(pp, i)
-    if not i and (typeof(pp) ~= "Instance" or not pp:IsA("ProximityPrompt") or not pcall(canGetPivot, pp) or cd[pp] or not workspace.CurrentCamera or ((game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and game.Players.LocalPlayer.Character.HumanoidRootPart or workspace.CurrentCamera).CFrame.Position - pp.Parent:GetPivot().Position
+    if not i and (typeof(pp) ~= "Instance" or not pp:IsA("ProximityPrompt") or not pcall(canGetPivot, pp) or cd[pp] or not workspace.CurrentCamera or ((game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and game.Players.LocalPlayer.Character.HumanoidRootPart or workspace.CurrentCamera).CFrame.Position - pp.Parent:GetPivot().Position).Magnitude > pp.MaxActivationDistance * 2) then return end
+    if fppn then
+        return fpp(pp)
+    end
+    task.spawn(fppFunc, pp)
+end
+
+local function insertCum(str)
+    local new = str:gsub("(%u)", " %1")
+    if new:sub(1, 1) == " " then
+        new = new:sub(2)
+    end
+
+    return new:gsub("  ", " "):gsub("_", "") .. ""
+end
+
+local function insertCum(str)
+    local new = str:gsub("(%u)", " %1")
+    if new:sub(1, 1) == " " then
+        new = new:sub(2)
+    end
+
+    return new:gsub("  ", " "):gsub("_", "") .. ""
+end
+
+local function getSelectedObject()
+    return game:GetService("ReplicatedStorage").Client.Handlers.DraggableItemHandlers.ClientDraggableObjectHandler.DragHighlight.Adornee
+end
+
+local function throwObject(object)
+    if (object:GetPivot().Position - plr.Character:GetPivot().Position).Magnitude > 20 then
+        return
+    end
+
+    game:GetService("ReplicatedStorage").Shared.Remotes.RequestStartDrag:FireServer(object)
+
+    local par
+
+    while true do
+        local drag1 = object:FindFirstChild("DragAttachment", math.huge)
+        local drag2 = object:FindFirstChild("DragAlignPosition", math.huge)
+        local drag3 = object:FindFirstChild("DragAlignOrientation", math.huge)
+
+        if not drag1 and not drag2 and not drag3 and par then
+            break
+        end
+
+        if drag1 then
+            par = drag1.Parent
+            drag1:Destroy()
+            continue
+        end
+        if drag2 then
+            par = drag2.Parent
+            drag2:Destroy()
+            continue
+        end
+        if drag3 then
+            par = drag3.Parent
+            drag3:Destroy()
+            continue
+        end
+
+        task.wait()
+    end
+
+    task.wait()
+
+    if par then
+        par.AssemblyLinearVelocity = CFrame.lookAt(workspace.CurrentCamera.CFrame.Position, par:GetPivot().Position + Vector3.new(0, ((10000 - vals.ThrowPower) / 1000), 0)).LookVector * vals.ThrowPower
+    end
+
+    game:GetService("ReplicatedStorage").Shared.Remotes.RequestEndDrag:FireServer(object)
+end
+
+local function throw()
+    local object = getSelectedObject()
+    if object then
+        throwObject(object)
+    else
+        lib.Notifications:Notification({Title = "哎呀！", Text = "请先选择一个物体！"})
+    end
+end
+
+local window = lib:CreateWindow({Title = "火焰中心", Size = UDim2.new(0, 500, 0, 400)})
+
+local page = window:AddPage({Title = "主要功能"})
+
+for i,v in vals.ESP do
+    page:AddToggle({Caption = insertCum(i), Default = v, Callback = function(b)
+        vals.ESP[i] = b
+    end})
+end
+
+page:AddSeparator()
+
+page:AddToggle({Caption = "自动收集钱袋", Default = vals.AutoCollectBags, Callback = function(b)
+    vals.AutoCollectBags = b
+end})
+page:AddToggle({Caption = "自动拾取工具", Default = vals.AutoPickTools, Callback = function(b)
+    vals.AutoPickTools = b
+end})
+page:AddToggle({Caption = "自动拾取其他物品", Default = vals.AutoPickOther, Callback = function(b)
+    vals.AutoPickOther = b
+end})
+page:AddToggle({Caption = "自动拾取护甲", Default = vals.AutoPickArmor, Callback = function(b)
+    vals.AutoPickArmor = b
+end})
+page:AddToggle({Caption = "自动拾取债券", Default = vals.AutoPickBonds, Callback = function(b)
+    vals.AutoPickBonds = b
+end})
+
+page:AddSeparator()
+
+page:AddLabel({Caption = "因为不稳定+无法杀死动物，自动功能已被移除"})
+page:AddLabel({Caption = "如果周围没有活着的僵尸，保存子弹将取消射击"})
+page:AddSeparator()
+
+local page = window:AddPage({Title = "恶搞功能"})
+
+page:AddButton({Caption = "投掷物体", Callback = throw})
+page:AddSlider({Caption = "投掷力量", Default = vals.ThrowPower, Min = 10, Max = 10000, Step = 1, Callback = function(b)
+    vals.ThrowPower = b
+end})
+
+local throwKey = Enum.KeyCode.X
+page:AddInput({Text = "投掷快捷键", Default = throwKey.Name, Callback = function(kc)
+    throwKey = kc
+end})
+
+cons[#cons+1] = game:GetService("UserInputService").InputBegan:Connect(function(kk, a)
+    if a or kk.KeyCode ~= throwKey then return end
+    throw()
+end)
+
+page:AddLabel({Caption = "试着扔一个朋友的尸体 XD"})
+
+page:AddSeparator()
+
+page:AddButton({Caption = "火车故障", Callback = function()
+    if workspace.Train.TrainControls.ConductorSeat:FindFirstChild("VehicleSeat") then
+        local old = plr.Character:GetPivot()
+        plr.Character:PivotTo(old + Vector3.new(0, 5))
+        task.wait(0.02)
+        plr.Character:PivotTo(workspace.Train.TrainControls.ConductorSeat.VehicleSeat:GetPivot())
+        task.wait(0.02)
+        plr.Character:PivotTo(old)
+    else
+        lib.Notifications:Notification({Title = "哎呀！", Text = "火车似乎离得太远了"})
+    end
+end})
+
+espFunc(workspace:WaitForChild("Train", 9e9), {HighlightEnabled = false, Color = Color3.fromRGB(55, 65, 65), Text = "火车", ESPName = "火车(最有用)ESP"})
