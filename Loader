@@ -1,13 +1,13 @@
 local defaults = {
 	ESP = {
-		["Money BagESP"] = false,
-		["MonsterESP"] = false,
-		["Dead MonsterESP"] = false,
-		["AnimalESP"] = false,
-		["Dead AnimalESP"] = false,
-		["ItemESP"] = false,
-		["Vault CodeESP"] = false,
-		["Train (the most useful)ESP"] = false
+		["钱袋透视"] = false,
+		["敌人透视"] = false,
+		["敌人尸体透视"] = false,
+		["动物透视"] = false,
+		["动物尸体透视"] = false,
+		["物品透视"] = false,
+		["银行密码透视"] = false,
+		["火车透视"] = false
 	},
 	ExtraPP = 1,
 	AutoCollectBags = false,
